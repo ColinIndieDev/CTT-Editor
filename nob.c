@@ -7,11 +7,12 @@
 #define BUILD_FOLDER "build/"
 #define INCLUDE_FOLDER "deps/include"
 #define LIB_FOLDER "deps/lib"
-#define EXEC_NAME "a"
+#define EXEC_NAME "ctt"
 // DEV, REL or DEB build
 #define DEV
 
 const char *flags[] = {
+    "-static",
 #ifdef DEB
     "-fsanitize=address,undefined",
     "-fsanitize-recover=address",
