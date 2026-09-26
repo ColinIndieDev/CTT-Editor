@@ -398,8 +398,15 @@ int main(int argc, char **argv) {
                             chars_written[0] = 0;
                         }
                         break;
-                    case 's':
+                    case 'S':
                         cursor_x = X_OFF;
+                        break;
+                    case 's':
+                        for (cursor_x = X_OFF; cursor_x < cols - 1; cursor_x++) {
+                            if (!isspace(buffer[cursor_y][cursor_x])) {
+                                break;
+                            }
+                        }
                         break;
                     case 'e':
                         cursor_x = chars_written[cursor_y] + X_OFF;
@@ -409,6 +416,16 @@ int main(int argc, char **argv) {
                         cursor_y = 0;
                         if (cursor_y < row_offset) {
                             row_offset = cursor_y;
+                        }
+                        break;
+                    case 'm':
+                        cursor_x = X_OFF;
+                        cursor_y = rows_written / 2 - 1;
+                        if (cursor_y < row_offset) {
+                            row_offset = cursor_y;
+                        }
+                        if (cursor_y >= row_offset + screen_rows) {
+                            row_offset = cursor_y - screen_rows + 1;
                         }
                         break;
                     case 'n':
