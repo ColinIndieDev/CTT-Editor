@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define error(s) fprintf(stderr, (s));
 
@@ -34,7 +35,7 @@ char info[] = {
     "▒▓███▄▄▄▓█▓▓▓     ▓██▓▓         ▓██▓▓    \n"
     "░████████▓▓▒▒     ▒█▓▒▒         ▒█▓▒▒    \n"
     " ▀▓███▓▓▓▓▒░░     ░▓▒░░         ░▓▒░░    \n"
-    "   ▀▀▀▀▀▀▀▀▀      ▀▀▀▀          ▀▀▀▀      V.1.0\n"
+    "   ▀▀▀▀▀▀▀▀▀      ▀▀▀▀          ▀▀▀▀      V.1.1\n"
     "\n"
     "YOUR MINIMALISTIC, TERMINAL-BASED TEXTEDITOR\n"
     "\n"
@@ -141,6 +142,7 @@ int cursor_x = X_OFF;
 int cursor_y = 0;
 int row_offset = 0;
 int edit_mode = NORMAL_MODE;
+int line_number_jump = -1; // if not -1 and enter is hit, go to this line number
 
 int *chars_written = NULL;
 int rows_written = 1;
@@ -223,12 +225,6 @@ int main(int argc, char **argv) {
         fclose(file_exist);
     }
 
-    FILE *file = fopen(argv[1], "wb");
-    if (!file) {
-        perror("");
-        return 1;
-    }
-
     int screen_rows = rows - 1;
 
     while (1) {
@@ -241,20 +237,35 @@ int main(int argc, char **argv) {
                 edit_mode = NORMAL_MODE;
             }
         } else if (n == 1) {
-            if (KEY_ENTER(key_buffer) && edit_mode == INSERT_MODE) {
-            ensure_buffer_capacity(rows_written + 1);
-            for (int y = rows_written; y > cursor_y; y--) {
-                    memcpy(buffer[y], buffer[y - 1], cols);
-                    chars_written[y] = chars_written[y - 1];
-                }
-                cursor_y++;
-                cursor_x = X_OFF;
-                memset(buffer[cursor_y], ' ', cols);
-                chars_written[cursor_y] = 0;
-                rows_written++;
-                did_changes = true;
-                if (cursor_y >= row_offset + screen_rows) {
-                    row_offset = cursor_y - screen_rows + 1;
+            if (KEY_ENTER(key_buffer)) {
+                if (edit_mode == INSERT_MODE) {
+                    ensure_buffer_capacity(rows_written + 1);
+                    for (int y = rows_written; y > cursor_y; y--) {
+                        memcpy(buffer[y], buffer[y - 1], cols);
+                        chars_written[y] = chars_written[y - 1];
+                    }
+                    cursor_y++;
+                    cursor_x = X_OFF;
+                    memset(buffer[cursor_y], ' ', cols);
+                    chars_written[cursor_y] = 0;
+                    rows_written++;
+                    did_changes = true;
+                    if (cursor_y >= row_offset + screen_rows) {
+                        row_offset = cursor_y - screen_rows + 1;
+                    }
+                } else if (edit_mode == NORMAL_MODE && line_number_jump > 0) {
+                    cursor_y = line_number_jump - 1;
+                    cursor_x = X_OFF;
+                    if (cursor_y >= rows_written) {
+                        cursor_y = rows_written - 1;
+                    }
+                    if (cursor_y < row_offset) {
+                        row_offset = cursor_y;
+                    }
+                    if (cursor_y >= row_offset + screen_rows) {
+                        row_offset = cursor_y - screen_rows + 1;
+                    }
+                    line_number_jump = -1;
                 }
             } else if (KEY_BACKSPACE(key_buffer) && cursor_x >= X_OFF && edit_mode == INSERT_MODE) {
                 if (cursor_y >= rows_written - 1 && chars_written[cursor_y] <= 0 && cursor_y > 0) {
@@ -317,16 +328,10 @@ int main(int argc, char **argv) {
                 } else if (edit_mode == NORMAL_MODE) {
                     switch(key_buffer[0]) {
                     case 'i':
+                        line_number_jump = -1;
                         edit_mode = INSERT_MODE;
                         break;
                     case 'q': {
-                        FILE *dummy = freopen(argv[1], "wb", file);
-                        for (int i = 0; i < rows_written; ++i) {
-                            fwrite(&buffer[i][X_OFF], 1, chars_written[i], file);
-                            char newline = '\n';
-                            fwrite(&newline, 1, 1, file);
-                        }
-                        fclose(file);
                         cplt_end();
                         for (size_t i = 0; i < buffer_cap; ++i) {
                             free(buffer[i]);
@@ -337,13 +342,19 @@ int main(int argc, char **argv) {
                         break;
                     }
                     case 'w': {
-                        FILE *dummy = freopen(argv[1], "wb", file);
+                        FILE *file = fopen(argv[1], "wb");
+                        if (!file) {
+                            perror("Failed writing to file");
+                            break;
+                        }
                         for (int i = 0; i < rows_written; ++i) {
                             fwrite(&buffer[i][X_OFF], 1, chars_written[i], file);
                             char newline = '\n';
                             fwrite(&newline, 1, 1, file);
                         }
                         fflush(file);
+                        fclose(file);
+                        file = NULL;
                         did_changes = false;
                         break;
                     }
@@ -457,33 +468,68 @@ int main(int argc, char **argv) {
                         break;
                     case 'k':
                         if (cursor_y > 0) {
-                            bool end_of_line = cursor_x >= chars_written[cursor_y] + X_OFF;
-                            cursor_y--;
-                            if (cursor_y < row_offset) {
-                                row_offset = cursor_y;
-                            }
-                            if (end_of_line) {
-                                cursor_x = chars_written[cursor_y] + X_OFF;
+                            if (line_number_jump <= 0) {
+                                bool end_of_line = cursor_x >= chars_written[cursor_y] + X_OFF;
+                                cursor_y--;
+                                if (cursor_y < row_offset) {
+                                    row_offset = cursor_y;
+                                }
+                                if (end_of_line) {
+                                    cursor_x = chars_written[cursor_y] + X_OFF;
+                                } else {
+                                    cursor_x = cursor_x > chars_written[cursor_y] + X_OFF ? chars_written[cursor_y] + X_OFF : cursor_x;
+                                }
                             } else {
-                                cursor_x = cursor_x > chars_written[cursor_y] + X_OFF ? chars_written[cursor_y] + X_OFF : cursor_x;
+                                cursor_x = X_OFF;
+                                if (cursor_y + 1 > line_number_jump) {
+                                    cursor_y -= line_number_jump;
+                                } else {
+                                    cursor_y = 0;
+                                }
+                                if (cursor_y < row_offset) {
+                                    row_offset = cursor_y;
+                                }
+                                line_number_jump = -1;
                             }
                         }
                         break;
                     case 'j':
                         if (cursor_y < rows_written - 1) {
-                            bool end_of_line = cursor_x >= chars_written[cursor_y] + X_OFF;
-                            cursor_y++;
-                            if (cursor_y >= row_offset + screen_rows) {
-                                row_offset = cursor_y - screen_rows + 1;
-                            }
-                            if (end_of_line) {
-                                cursor_x = chars_written[cursor_y] + X_OFF;
+                            if (line_number_jump <= 0) {
+                                bool end_of_line = cursor_x >= chars_written[cursor_y] + X_OFF;
+                                cursor_y++;
+                                if (cursor_y >= row_offset + screen_rows) {
+                                    row_offset = cursor_y - screen_rows + 1;
+                                }
+                                if (end_of_line) {
+                                    cursor_x = chars_written[cursor_y] + X_OFF;
+                                } else {
+                                    cursor_x = cursor_x > chars_written[cursor_y] + X_OFF ? chars_written[cursor_y] + X_OFF : cursor_x;
+                                }
                             } else {
-                                cursor_x = cursor_x > chars_written[cursor_y] + X_OFF ? chars_written[cursor_y] + X_OFF : cursor_x;
+                                cursor_x = X_OFF;
+                                if (rows_written - cursor_y > line_number_jump) {
+                                    cursor_y += line_number_jump;
+                                } else {
+                                    cursor_y = rows_written - 1;
+                                }
+                                if (cursor_y >= row_offset + screen_rows) {
+                                    row_offset = cursor_y - screen_rows + 1;
+                                }
+                                line_number_jump = -1;
                             }
                         }
                         break;
                     default:
+                        if (isdigit(key_buffer[0])) {
+                            if (line_number_jump < 0) {
+                                line_number_jump = key_buffer[0] - '0';
+                            } else {
+                                line_number_jump *= 10;
+                                line_number_jump += (key_buffer[0] - '0');
+                            }
+
+                        }
                         break;
                     }
                 }
@@ -502,11 +548,26 @@ int main(int argc, char **argv) {
         }
         
         cplt_puts(0, rows - 1, edit_mode == NORMAL_MODE ? " NORMAL " : " INSERT ", RGB(0, 0, 0), edit_mode == NORMAL_MODE ? RGB(255, 255, 255) : RGB(0, 255, 150));
-        cplt_puts(8, rows - 1, argv[1], RGB(0, 0, 0), RGB(0, 200, 255));
-        if (did_changes) {
-            cplt_puts(8 + strlen(argv[1]), rows - 1, " (Edited)", RGB(0, 0, 0), RGB(0, 200, 255));
-        } else {
-            cplt_puts(8 + strlen(argv[1]), rows - 1, "         ", RGB(255, 255, 255), RGB(0, 0, 0));
+        for (int x = 8; x < cols; ++x) {
+            cplt_putc(x, rows - 1, ' ', RGB(255, 255, 255), RGB(45, 45, 45));
+        }
+        cplt_puts(8 + 1, rows - 1, argv[1], RGB(255, 255, 255), RGB(45, 45, 45));
+        {
+            char pos[256] = {0};
+            snprintf(pos, sizeof(pos), " %5d:%-3d (%d%%)", cursor_y + 1, cursor_x - X_OFF + 1, (int)((float)(cursor_y + 1) / rows_written * 100.0f));
+            cplt_puts(8 + 1 + strlen(argv[1]), rows - 1, pos, RGB(255, 255, 255), RGB(45, 45, 45));
+
+            if (did_changes) {
+                cplt_puts(8 + 1 + strlen(argv[1]) + strlen(pos) + 1, rows - 1, "(Edited)", RGB(255, 255, 255), RGB(45, 45, 45));
+            }
+        }
+
+        {
+            time_t t = time(NULL);
+            struct tm *tm = localtime(&t);
+            char date[256] = {0};
+            snprintf(date, sizeof(date), "%02d/%02d/%04d %02d:%02d", tm->tm_mday, tm->tm_mon + 1, tm->tm_year + 1900, tm->tm_hour, tm->tm_min);
+            cplt_puts(cols - 1 - strlen(date), rows - 1, date, RGB(255, 255, 255), RGB(45, 45, 45));
         }
 
         bool multiline_comment = false;
@@ -579,7 +640,6 @@ int main(int argc, char **argv) {
         }
         cplt_refresh();
     }
-    fclose(file);
     cplt_end();
     for (size_t i = 0; i < buffer_cap; ++i) {
         free(buffer[i]);

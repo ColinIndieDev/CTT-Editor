@@ -9,7 +9,7 @@
 #define LIB_FOLDER "deps/lib"
 #define EXEC_NAME "ctt"
 // DEV, REL or DEB build
-#define DEV
+#define REL
 
 const char *flags[] = {
     "-static",
