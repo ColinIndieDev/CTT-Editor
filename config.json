@@ -1,0 +1,344 @@
+{
+    "keywords": [
+        {
+            "keyword": "#define",
+            "color": [125, 125, 125]
+        },
+        {
+            "keyword": "#include",
+            "color": [125, 125, 125]
+        },
+        {
+            "keyword": "#ifdef",
+            "color": [125, 125, 125]
+        },
+        {
+            "keyword": "#ifndef",
+            "color": [125, 125, 125]
+        },
+        {
+            "keyword": "#else",
+            "color": [125, 125, 125]
+        },
+        {
+            "keyword": "#endif",
+            "color": [125, 125, 125]
+        },
+        {
+            "keyword": "#if",
+            "color": [125, 125, 125]
+        },
+        {
+            "keyword": "#pragma once",
+            "color": [125, 125, 125]
+        },
+        {
+            "keyword": "#pragma region",
+            "color": [125, 125, 125]
+        },
+        {
+            "keyword": "#pragma endregion",
+            "color": [125, 125, 125]
+        },
+
+        {
+            "keyword": "int",
+            "color": [0, 255, 255]
+        },
+        {
+            "keyword": "float",
+            "color": [0, 255, 255]
+        },
+        {
+            "keyword": "double",
+            "color": [0, 255, 255]
+        },
+        {
+            "keyword": "char",
+            "color": [0, 255, 255]
+        },
+        {
+            "keyword": "short",
+            "color": [0, 255, 255]
+        },
+        {
+            "keyword": "long",
+            "color": [0, 255, 255]
+        },
+        {
+            "keyword": "bool",
+            "color": [0, 255, 255]
+        },
+        {
+            "keyword": "void",
+            "color": [0, 255, 255]
+        },
+        {
+            "keyword": "auto",
+            "color": [0, 255, 255]
+        },
+        {
+            "keyword": "enum",
+            "color": [0, 255, 255]
+        },
+        {
+            "keyword": "union",
+            "color": [0, 225, 255]
+        },
+        {
+            "keyword": "struct",
+            "color": [0, 225, 255]
+        },
+        {
+            "keyword": "register",
+            "color": [0, 225, 255]
+        },
+
+        {
+            "keyword": "signed",
+            "color": [0, 225, 255]
+        },
+        {
+            "keyword": "unsigned",
+            "color": [0, 225, 255]
+        },
+        {
+            "keyword": "const",
+            "color": [0, 225, 255]
+        },
+        {
+            "keyword": "static",
+            "color": [0, 225, 255]
+        },
+        {
+            "keyword": "inline",
+            "color": [0, 225, 255]
+        },
+        {
+            "keyword": "volatile",
+            "color": [0, 225, 255]
+        },
+        {
+            "keyword": "typedef",
+            "color": [0, 225, 255]
+        },
+
+        {
+            "keyword": "if",
+            "color": [0, 155, 255]
+        },
+        {
+            "keyword": "else",
+            "color": [0, 155, 255]
+        },
+        {
+            "keyword": "while",
+            "color": [0, 155, 255]
+        },
+        {
+            "keyword": "for",
+            "color": [0, 155, 255]
+        },
+        {
+            "keyword": "do",
+            "color": [0, 155, 255]
+        },
+        {
+            "keyword": "switch",
+            "color": [0, 155, 255]
+        },
+        {
+            "keyword": "case",
+            "color": [0, 155, 255]
+        },
+        {
+            "keyword": "break",
+            "color": [0, 155, 255]
+        },
+        {
+            "keyword": "continue",
+            "color": [0, 155, 255]
+        },
+        {
+            "keyword": "return",
+            "color": [0, 155, 255]
+        },
+        {
+            "keyword": "default",
+            "color": [0, 155, 255]
+        },
+        {
+            "keyword": "extern",
+            "color": [0, 155, 255]
+        },
+        {
+            "keyword": "goto",
+            "color": [0, 155, 255]
+        },
+
+        {
+            "keyword": "sizeof",
+            "color": [0, 155, 255]
+        },
+        {
+            "keyword": "NULL",
+            "color": [255, 55, 0]
+        },
+        {
+            "keyword": "true",
+            "color": [255, 55, 0]
+        },
+        {
+            "keyword": "false",
+            "color": [255, 55, 0]
+        },
+        {
+            "keyword": "stdin",
+            "color": [255, 55, 0]
+        },
+        {
+            "keyword": "stderr",
+            "color": [255, 55, 0]
+        },
+        {
+            "keyword": "size_t",
+            "color": [0, 225, 255]
+        },
+        {
+            "keyword": "int8_t",
+            "color": [0, 225, 255]
+        },
+        {
+            "keyword": "int16_t",
+            "color": [0, 255, 255]
+        },
+        {
+            "keyword": "int32_t",
+            "color": [0, 255, 255]
+        },
+        {
+            "keyword": "int64_t",
+            "color": [0, 255, 255]
+        },
+        {
+            "keyword": "uint8_t",
+            "color": [0, 255, 255]
+        },
+        {
+            "keyword": "uint16_t",
+            "color": [0, 255, 255]
+        },
+        {
+            "keyword": "uint32_t",
+            "color": [0, 255, 255]
+        },
+        {
+            "keyword": "uint64_t",
+            "color": [0, 255, 255]
+        },
+        {
+            "keyword": "FILE",
+            "color": [0, 255, 255]
+        },
+        {
+            "keyword": "printf",
+            "color": [155, 0, 255]
+        },
+        {
+            "keyword": "fprintf",
+            "color": [155, 0, 255]
+        },
+        {
+            "keyword": "memmove",
+            "color": [155, 0, 255]
+        },
+        {
+            "keyword": "memcpy",
+            "color": [155, 0, 255]
+        },
+        {
+            "keyword": "memset",
+            "color": [155, 0, 255]
+        },
+        {
+            "keyword": "strlen",
+            "color": [155, 0, 255]
+        },
+        {
+            "keyword": "strcmp",
+            "color": [155, 0, 255]
+        },
+        {
+            "keyword": "strncmp",
+            "color": [155, 0, 255]
+        },
+        {
+            "keyword": "strcat",
+            "color": [155, 0, 255]
+        },
+        {
+            "keyword": "strncat",
+            "color": [155, 0, 255]
+        },
+        {
+            "keyword": "fopen",
+            "color": [155, 0, 255]
+        },
+        {
+            "keyword": "freopen",
+            "color": [155, 0, 255]
+        },
+        {
+            "keyword": "fclose",
+            "color": [155, 0, 255]
+        },
+        {
+            "keyword": "fwrite",
+            "color": [155, 0, 255]
+        },
+        {
+            "keyword": "fread",
+            "color": [155, 0, 255]
+        },
+        {
+            "keyword": "fflush",
+            "color": [155, 0, 255]
+        },
+        {
+            "keyword": "sprintf",
+            "color": [155, 0, 255]
+        },
+        {
+            "keyword": "snprintf",
+            "color": [155, 0, 255]
+        },
+        {
+            "keyword": "fgets",
+            "color": [155, 0, 255]
+        },
+        {
+            "keyword": "isalpha",
+            "color": [155, 0, 255]
+        },
+        {
+            "keyword": "isdigit",
+            "color": [155, 0, 255]
+        },
+        {
+            "keyword": "malloc",
+            "color": [155, 0, 255]
+        },
+        {
+            "keyword": "calloc",
+            "color": [155, 0, 255]
+        },
+        {
+            "keyword": "free",
+            "color": [155, 0, 255]
+        },
+        {
+            "keyword": "realloc",
+            "color": [155, 0, 255]
+        }
+    ]
+}

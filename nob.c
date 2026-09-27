@@ -39,8 +39,8 @@ const char *src[] = {
 };
 
 const char *libs[] = {
-    "cpstd",
-    "cplt"
+    "cplt",
+    "json-c"
 };
 
 int main(int argc, char *argv[]) {
