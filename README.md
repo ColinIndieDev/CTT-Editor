@@ -4,13 +4,5 @@ CTT is a Vim inspired text editor providing easier, more intuitive but less comm
 It is relatively fast since it is written in pure C and supports syntax highlighting (for now only for C code) by a .json configuration file.
 
 # Controls
-CTT only has a normal and insert mode. Normal is for navigating through the file and executing commands whereas the insert mode is used to type text
-
-(Normal mode only)
-
-`hjkl` Move cursor
-
-`Any number` Adds up to a number you wrote
-
-`Enter` Go to the line number x which you previously specified (see `Any number`) which gets reset to 0 afterwards
-
+CTT only has a normal and insert mode. Normal is for navigating through the file and executing commands whereas the insert mode is used to type text.
+There are also shortcuts but nothing fancy since CTT should stay minimal like that (similar to nano)
